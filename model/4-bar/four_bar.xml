@@ -1,0 +1,110 @@
+<mujoco model="4-bar mechanism">
+  <option timestep="0.002" gravity="0 0 -9.81"/>
+
+  <visual>
+    <rgba haze=".3 .3 .3 1"/>
+    <headlight ambient=".1 .1 .1"/>
+  </visual>
+
+  <default>
+    <!-- 기본 조인트 설정: 댐핑을 주어 움직임을 안정화 -->
+    <joint damping="0.05" limited="false"/>
+    <!-- 링크(캡슐)의 시각적 속성: 반지름 10mm(0.01m), Link2(0.4m)가 1kg이 되도록 밀도 설정 -->
+    <geom type="capsule" size="0.01" density="7701.046" rgba="0.9 0.5 0.5 1"/>
+    <!-- 사이트(연결점)의 시각적 속성 -->
+    <site type="sphere" size="0.03" rgba="0 0.8 0 1"/>
+  </default>
+
+  <worldbody>
+    <!-- 바닥 -->
+    <geom name="floor" type="plane" size="2 2 0.1" rgba=".8 .9 .8 1"/>
+    <light pos="0 0 3" dir="0 0 -1" diffuse="1 1 1"/>
+
+    <!-- J1: 원점 (0,0) -->
+    <!-- Link 2 (길이 400mm -> 0.4m) -->
+    <body name="link2" pos="0 0 0.1">
+      <joint name="J1" type="hinge" axis="0 0 1" pos="0 0 0"/>
+      <!-- J1 반력 측정을 위한 사이트 -->
+      <site name="site_J1" pos="0 0 0" size="0.01" rgba="0.8 0 0 1"/>
+      
+      <!-- 시각적 링크: J1(0,0,0)에서 J2(0,0.4,0)까지 -->
+      <geom fromto="0 0 0  0 0.4 0" name="geom_link2"/>
+      
+      <!-- J2 위치 (Link 2의 끝) -->
+      <!-- Link 3 (길이 1000mm -> 1.0m) -->
+      <body name="link3" pos="0 0.4 0" euler="0 0 0.407">
+        <joint name="J2" type="hinge" axis="0 0 1" pos="0 0 0"/>
+        <!-- J2 반력 측정을 위한 사이트 -->
+        <site name="site_J2" pos="0 0 0" size="0.01" rgba="0.8 0 0 1"/>
+
+        <!-- 시각적 링크: J2(0,0,0)에서 J3가 될 지점(1.0, 0, 0)까지 -->
+        <geom fromto="0 0 0  1.0 0 0" name="geom_link3" rgba="0.5 0.5 0.9 1"/>
+        
+        <!-- J3 연결을 위한 사이트 (Constraint용) -->
+        <site name="site_J3_A" pos="1.0 0 0"/>
+      </body>
+    </body>
+
+    <!-- J4: (1000mm, 0) -> (1.0m, 0) -->
+    <!-- J4 Anchor Site (World) -->
+    <site name="site_J4_Anchor" pos="1.0 0 0.1" size="0.02" rgba="0 0.5 0.8 1"/>
+    
+    <!-- Link 4 (길이 800mm -> 0.8m) -->
+    <body name="link4" pos="1.0 0 0.1" euler="0 0 -0.422">
+      <!-- J4 Reaction Force 측정을 위해 Hinge 대신 Free Joint + Constraint 사용 -->
+      <freejoint name="J4_Free"/>
+      <site name="site_J4_Link" pos="0 0 0" size="0.01"/>
+      
+      <!-- 시각적 링크: J4(0,0,0)에서 J3가 될 지점(-0.4, 0.6928, 0) -->
+      <geom fromto="0 0 0  -0.4 0.6928 0" name="geom_link4" rgba="0.5 0.9 0.5 1"/>
+      
+      <!-- J3 연결을 위한 사이트 (Constraint용 - Link 4의 끝) -->
+      <site name="site_J3_B" pos="-0.4 0.6928 0"/>
+    </body>
+
+  </worldbody>
+
+  <!-- 루프 폐곡선 조건 (Loop Closure Constraint) -->
+  <equality>
+    <!-- J3 연결 (Link3 <-> Link4) -->
+    <connect site1="site_J3_A" site2="site_J3_B"/>
+    <!-- J4 연결 (World <-> Link4, Ball Joint 역할, 2D이므로 Hinge처럼 거동) -->
+    <!-- 정확히 Hinge로 만들려면 Orientation Constraint도 필요하지만, 2D 평면 구속(z축)이 있다면 Connect만으로도 충분할 수 있음. -->
+    <!-- 하지만 3D 공간이므로 Link4가 넘어질 수 있음. -->
+    <!-- 간단히 Connect만 사용하여 Ball Joint처럼 만들고, 중력/시뮬레이션 안정성 확인 -->
+    <connect name="J4_Constraint" site1="site_J4_Anchor" site2="site_J4_Link"/>
+  </equality>
+  
+  <!-- Actuator: Velocity Control (RPM control) -->
+  <actuator>
+    <!-- 
+      velocity actuator:
+      ctrl input sets the target angular velocity (rad/s).
+      kv: Velocity feedback gain (damping).
+      ctrlrange: Input range in rad/s. +/- 20 rad/s is approx +/- 190 RPM.
+    -->
+    <velocity name="motor_J1_vel" joint="J1" kv="10" ctrlrange="-20 20"/>
+  </actuator>
+
+  <sensor>
+    <!-- J1: Velocity (rad/s) and Torque -->
+    <!-- Note: MuJoCo native sensors output in SI units (rad/s). 1 rad/s approx 9.55 RPM -->
+    <jointvel name="J1_Vel (rad/s)" joint="J1"/>
+    <actuatorfrc name="J1_Torque (Nm)" actuator="motor_J1_vel"/>
+    <force name="J1_Reaction (N)" site="site_J1"/>
+
+    <!-- J2: Pos, Vel -->
+    <framepos name="J2_Pos" objtype="body" objname="link3"/>
+    <framelinvel name="J2_Vel" objtype="body" objname="link3"/>
+    <force name="J2_Reaction (N)" site="site_J2"/>
+    
+    <!-- J3: Pos, Vel, Reaction Force -->
+    <framepos name="J3_Pos" objtype="site" objname="site_J3_A"/>
+    <framelinvel name="J3_Vel" objtype="site" objname="site_J3_A"/>
+    <force name="J3_Reaction (N)" site="site_J3_A"/>
+
+    <!-- J4: Reaction Force (Constraints) -->
+    <force name="J4_Reaction (N)" site="site_J4_Anchor"/>
+  </sensor>
+
+</mujoco>
