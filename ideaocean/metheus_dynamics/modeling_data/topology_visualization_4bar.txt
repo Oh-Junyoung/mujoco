@@ -1,0 +1,78 @@
+====================================================================================================
+ METHEUS DYNAMICS - 4-BAR TOPOLOGY INSPECTION
+====================================================================================================
+Total 4-bar Topologies: 4
+Source: C:\Users\User\Downloads\METHEUS_Dynamics\data\topology_info.pkl
+----------------------------------------------------------------------------------------------------
+
+TOPOLOGY ID: 0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  number_of_binary_links              : 4
+  number_of_ternary_links             : 0
+  number_of_quaternary_links          : 0
+  index_of_ground_link                : 0
+  number_of_joints_of_ground_link     : 2
+  input_link_index                    : 2
+  joint_type_list                     : [1 1 1 1]
+  rocker_list                         : [3]
+  end_effector_link_list              : [1]
+  array_of_adjacency_matrices         : [[0 0 1 1]
+                       [0 0 1 1]
+                       [1 1 0 0]
+                       [1 1 0 0]]
+
+----------------------------------------------------------------------------------------------------
+
+TOPOLOGY ID: 1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  number_of_binary_links              : 4
+  number_of_ternary_links             : 0
+  number_of_quaternary_links          : 0
+  index_of_ground_link                : 0
+  number_of_joints_of_ground_link     : 2
+  input_link_index                    : 2
+  joint_type_list                     : [1 2 1 1]
+  rocker_list                         : [3]
+  end_effector_link_list              : [1]
+  array_of_adjacency_matrices         : [[0 0 1 1]
+                       [0 0 1 1]
+                       [1 1 0 0]
+                       [1 1 0 0]]
+
+----------------------------------------------------------------------------------------------------
+
+TOPOLOGY ID: 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  number_of_binary_links              : 4
+  number_of_ternary_links             : 0
+  number_of_quaternary_links          : 0
+  index_of_ground_link                : 0
+  number_of_joints_of_ground_link     : 2
+  input_link_index                    : 3
+  joint_type_list                     : [1 1 1 1]
+  rocker_list                         : [2]
+  end_effector_link_list              : [1]
+  array_of_adjacency_matrices         : [[0 0 1 1]
+                       [0 0 1 1]
+                       [1 1 0 0]
+                       [1 1 0 0]]
+
+----------------------------------------------------------------------------------------------------
+
+TOPOLOGY ID: 3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  number_of_binary_links              : 4
+  number_of_ternary_links             : 0
+  number_of_quaternary_links          : 0
+  index_of_ground_link                : 0
+  number_of_joints_of_ground_link     : 2
+  input_link_index                    : 3
+  joint_type_list                     : [2 1 1 1]
+  rocker_list                         : [2]
+  end_effector_link_list              : [1]
+  array_of_adjacency_matrices         : [[0 0 1 1]
+                       [0 0 1 1]
+                       [1 1 0 0]
+                       [1 1 0 0]]
+
+----------------------------------------------------------------------------------------------------
