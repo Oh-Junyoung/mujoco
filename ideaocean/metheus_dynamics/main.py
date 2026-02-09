@@ -1,14 +1,14 @@
 # main.py
-from TopologyDataLoader import TopologyDataLoader
-from TopologyCalculator import TopologyCalculator
-from InitialDesignVariableGenerator import InitialDesignVariableGenerator
-from InputMotionGenerator import InputMotionGenerator
-from PhysicalParametersGenerator import PhysicalParametersGenerator
-from DynamicsSimulator import DynamicsSimulator
-from GenerationStrategies import GenerationStrategies
-from MechanismAnimator import MechanismAnimator
-from SliderDirectionGenerator import SliderDirectionGenerator
-from export_simulation_results_to_csv import export_simulation_results_to_csv
+from topology_data_load.TopologyDataLoader import TopologyDataLoader
+from topology_data_load.TopologyCalculator import TopologyCalculator
+from model_generator.InitialDesignVariableGenerator import InitialDesignVariableGenerator
+from model_generator.InputMotionGenerator import InputMotionGenerator
+from model_generator.PhysicalParametersGenerator import PhysicalParametersGenerator
+from dynamic_simulator.DynamicsSimulator import DynamicsSimulator
+from model_generator.GenerationStrategies import GenerationStrategies
+from post_process.MechanismAnimator import MechanismAnimator
+from model_generator.SliderDirectionGenerator import SliderDirectionGenerator
+from post_process.export_simulation_results_to_csv import export_simulation_results_to_csv
 
 import numpy as np
 
@@ -16,9 +16,16 @@ import numpy as np
 # 기구 위상 정보 로드
 ## -------------------------------------------------------------------------------------------------------------------------
 
-topology_loader         = TopologyDataLoader()      # 위상 데이터 셋을 불러오는 인스턴스 생성
+# (Fixed) 스크립트 실행 위치와 무관하게 ./data 폴더를 찾을 수 있도록 절대 경로로 변환
+import os
+from pathlib import Path
+
+current_dir = Path(__file__).parent
+data_folder = current_dir / "data"
+
+topology_loader         = TopologyDataLoader(data_folder=data_folder)   # 위상 데이터 셋을 불러오는 인스턴스 생성
 data                    = topology_loader.load()    # 위상 데이터 로드
-number_of_topologies    = len(data)                 # 현재 데이터 셋의 위상 개수 계산 
+number_of_topologies    = 4                         # (Modified) 테스트를 위해 위상 개수를 4개로 제한 
 
 ## -------------------------------------------------------------------------------------------------------------------------
 # 초기 설계 변수 생성기 초기화
@@ -585,7 +592,7 @@ for topology_index in range(number_of_topologies):
                 results=results,
                 topology_index=topology_index,
                 sample_index=sample_index,
-                out_dir="./csv_export",
+                out_dir=os.path.join(current_dir, "csv_export"),
                 filename_prefix="sim",
                 include_after_pair=False,
             )

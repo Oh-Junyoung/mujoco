@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Dict, Optional, Tuple
-from TopologyCalculator import TopologyCalculator
+from topology_data_load.TopologyCalculator import TopologyCalculator
 
 
 class PhysicalParametersGenerator:

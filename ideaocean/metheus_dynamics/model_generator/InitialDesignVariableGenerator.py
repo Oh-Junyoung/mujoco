@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Callable, Optional, Tuple, Dict
-from TopologyCalculator import TopologyCalculator
-from GenerationStrategies import GenerationStrategies
+from topology_data_load.TopologyCalculator import TopologyCalculator
+from .GenerationStrategies import GenerationStrategies
 
 
 class InitialDesignVariableGenerator:
