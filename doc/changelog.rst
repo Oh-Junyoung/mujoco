@@ -20,6 +20,10 @@ Significant new features
 - Added new :ref:`flexvert<equality-flexvert>` equality constraints that enable cloth simulations with coarser meshes.
   This adds a new option ``vert`` to flexcomp edge :ref:`equality<flexcomp-edge-equality>` and the new equality type
   :ref:`flexvert<equality-flexvert>`.
+- Added implicit integration support for deformable objects (flex) in ``implicit`` and ``implicitfast``
+  :ref:`integrators<geIntegration>`. This method extracts the flex degrees of freedom and solves them as a dense block,
+  enabling increased stability for stiff flex objects without reducing the timestep. It is compatible with the
+  ``trilinear`` and ``quadratic`` :ref:`dof<body-flexcomp-dof>` types.
 
 .. container:: custom-clear
 
@@ -123,6 +127,8 @@ Bug fixes
   available cores.
 - The ``vertid`` argument of :ref:`mj_rayFlex` and :ref:`mju_raySkin` was marked as nullable but was not; it is now
   nullable.
+- Fixed :ref:`gravcomp<body-gravcomp>` being ignored for bodies with no joints nested inside jointed parent bodies
+  (:issue:`3066`, reported by :github:user:`Alex108306`).
 
 Version 3.4.0 (December 5, 2025)
 --------------------------------

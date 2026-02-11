@@ -16,7 +16,7 @@
 #define MUJOCO_MUJOCO_H_
 
 // header version; should match the library version as returned by mj_version()
-#define mjVERSION_HEADER 341
+#define mjVERSION_HEADER 350
 
 // needed to define size_t, fabs and log10
 #include <stdlib.h>
@@ -1521,6 +1521,36 @@ MJAPI void mjp_defaultDecoder(mjpDecoder* decoder);
 // Return the resource provider with the prefix that matches against the resource name.
 // If no match, return NULL.
 MJAPI const mjpDecoder* mjp_findDecoder(const mjResource* resource, const char* content_type);
+
+
+//---------------------------------- Resources -----------------------------------------------------
+
+// Open a resource; if the name doesn't have a prefix matching a registered resource provider,
+// then the OS filesystem is used.
+// Nullable: dir, vfs, error
+MJAPI mjResource* mju_openResource(const char* dir, const char* name,
+                                   const mjVFS* vfs, char* error, size_t nerror);
+
+// Close a resource; no-op if resource is NULL.
+MJAPI void mju_closeResource(mjResource* resource);
+
+// Set buffer to bytes read from the resource and return number of bytes in buffer;
+// return negative value if error.
+MJAPI int mju_readResource(mjResource* resource, const void** buffer);
+
+// For a resource with a name partitioned as {dir}{filename}, get the dir and ndir pointers.
+MJAPI void mju_getResourceDir(mjResource* resource, const char** dir, int* ndir);
+
+// Compare resource timestamp to provided timestamp.
+// Return 0 if timestamps match, >0 if resource is newer, <0 if resource is older.
+MJAPI int mju_isModifiedResource(const mjResource* resource, const char* timestamp);
+
+// Find the decoder for a resource and return the decoded spec.
+// The caller takes ownership of the spec and is responsible for cleaning it up.
+// Nullable: vfs
+MJAPI mjSpec* mju_decodeResource(mjResource* resource, const char* content_type,
+                                 const mjVFS* vfs);
+
 
 //---------------------------------- Threads -------------------------------------------------------
 
