@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<mujoco model="topo10_s0">
+  <compiler angle="radian" inertiafromgeom="false"/>
+  <option timestep="0.001" gravity="0 0 -9.81" integrator="implicit" iterations="500" tolerance="1e-12" noslip_iterations="10" noslip_tolerance="1e-8"/>
+  <visual>
+    <quality shadowsize="16384"/>
+  </visual>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.9 0.9 0.9" rgb2="0.8 0.8 0.8" width="100" height="100"/>
+    <material name="grid_mat" texture="grid" texrepeat="50 50" texuniform="true"/>
+  </asset>
+  <default>
+    <geom rgba="0.3 0.6 0.85 1" contype="0" conaffinity="0"/>
+    <joint limited="false" damping="0.01"/>
+    <equality solref="0.002 1" solimp="0.99 0.999 0.001 0.5 2"/>
+  </default>
+  <worldbody>
+    <light pos="0 0 5" dir="0 0 -1" diffuse="1 1 1"/>
+    <geom name="floor" type="plane" pos="0 0 -0.01" size="0.1 0.1 0.01" material="grid_mat"/>
+
+    <!-- ======== XYZ Axes at origin ======== -->
+    <geom type="capsule" fromto="0 0 0 0.12 0 0" size="0.0003" rgba="0.9 0.2 0.2 1" contype="0" conaffinity="0"/>
+    <geom type="capsule" fromto="0 0 0 0 0.12 0" size="0.0003" rgba="0.2 0.9 0.2 1" contype="0" conaffinity="0"/>
+    <geom type="capsule" fromto="0 0 0 0 0 0.05" size="0.0003" rgba="0.2 0.2 0.9 1" contype="0" conaffinity="0"/>
+    <geom type="capsule" fromto="-0.021563436 -0.049170096 0 0.033263081 -0.004386727 0" size="0.001" rgba="0.6 0.6 0.6 0.5" contype="0" conaffinity="0"/>
+    <geom type="capsule" fromto="0.033263081 -0.004386727 0 -0.034434885 -0.017326647 0" size="0.001" rgba="0.6 0.6 0.6 0.5" contype="0" conaffinity="0"/>
+    <geom type="capsule" fromto="-0.034434885 -0.017326647 0 -0.021563436 -0.049170096 0" size="0.001" rgba="0.6 0.6 0.6 0.5" contype="0" conaffinity="0"/>
+    <!-- Slider rail (fixed to ground) -->
+    <geom type="cylinder" fromto="0.0309260 -0.0376380 0 0.0356002 0.0288646 0" size="0.001" rgba="0.4 0.4 0.4 0.5" contype="0" conaffinity="0"/>
+    <body name="virtual_1" pos="0.033263081 -0.004386727 0">
+      <inertial pos="0 0 0" mass="0.0016" diaginertia="1.6e-07 1.6e-07 1.6e-07"/>
+      <joint name="P0" type="slide" axis="0.070113041 0.99753905 0"/>
+      <geom type="box" size="0.003 0.005 0.003" euler="0 0 -0.0702" rgba="0.25 0.85 0.25 1"/>
+      <site name="site_virtual_1_j0" pos="0 0 0" size="0.001"/>
+      <site name="site_virtual_1_j7" pos="0 0 0" size="0.001"/>
+      <body name="link_3" pos="0 0 0">
+        <inertial pos="-0.007809814 -0.0074249784 0" mass="0.000995052" diaginertia="1.09197e-06 1.09197e-06 1.09197e-06"/>
+        <joint name="D7" type="hinge" axis="0 0 1"/>
+        <geom type="capsule" fromto="0 0 0 0.008365192 -0.045134675 0" size="0.001"/>
+        <geom type="capsule" fromto="0 0 0 -0.031794634 0.02285974 0" size="0.001"/>
+        <geom type="sphere" size="0.001"/>
+        <geom type="capsule" fromto="0.008365192 -0.045134675 0 -0.031794634 0.02285974 0" size="0.001"/>
+        <site name="site_link_3_j3" pos="0.008365192 -0.045134675 0" size="0.001"/>
+        <site name="site_link_3_j5" pos="-0.031794634 0.02285974 0" size="0.001"/>
+        <site name="site_link_3_j7" pos="0 0 0" size="0.001"/>
+      </body>
+    </body>
+    <body name="link_4" pos="-0.034434885 -0.017326647 0">
+      <inertial pos="0.0073073139 -0.0030854415 0" mass="0.00634560" diaginertia="1.33082e-07 1.33082e-07 1.33082e-07"/>
+      <joint name="J1" type="hinge" axis="0 0 1" limited="true" range="0 2.4778759"/>
+      <geom type="capsule" fromto="0 0 0 0.014614628 -0.006170883 0" size="0.001" rgba="0.85 0.25 0.25 1"/>
+      <site name="site_link_4_j1" pos="0 0 0" size="0.001"/>
+      <site name="site_link_4_j6" pos="0.014614628 -0.006170883 0" size="0.001"/>
+      <body name="link_2" pos="0.014614628 -0.006170883 0">
+        <inertial pos="0.010644352 0.020985271 0" mass="0.01882432" diaginertia="3.47426e-06 3.47426e-06 3.47426e-06"/>
+        <joint name="J6" type="hinge" axis="0 0 1"/>
+        <geom type="capsule" fromto="0.021288705 0.041970543 0 0 0 0" size="0.001"/>
+        <site name="site_link_2_j5" pos="0.021288705 0.041970543 0" size="0.001"/>
+        <site name="site_link_2_j6" pos="0 0 0" size="0.001"/>
+      </body>
+    </body>
+    <body name="link_5" pos="-0.021563436 -0.049170096 0">
+      <inertial pos="0.014572921 0.0073316551 0" mass="0.01305064" diaginertia="1.15769e-06 1.15769e-06 1.15769e-06"/>
+      <joint name="J2" type="hinge" axis="0 0 1"/>
+      <geom type="capsule" fromto="0 0 0 0.029145843 0.01466331 0" size="0.001"/>
+      <site name="site_link_5_j2" pos="0 0 0" size="0.001"/>
+      <site name="site_link_5_j4" pos="0.029145843 0.01466331 0" size="0.001"/>
+      <body name="link_1" pos="0.029145843 0.01466331 0">
+        <inertial pos="0.017022933 -0.0075073083 0" mass="0.01488388" diaginertia="1.71730e-06 1.71730e-06 1.71730e-06"/>
+        <joint name="J4" type="hinge" axis="0 0 1"/>
+        <geom type="capsule" fromto="0.034045866 -0.015014617 0 0 0 0" size="0.001"/>
+        <site name="site_link_1_j3" pos="0.034045866 -0.015014617 0" size="0.001"/>
+        <site name="site_link_1_j4" pos="0 0 0" size="0.001"/>
+      </body>
+    </body>
+    <site name="site_ground_j0" pos="0.033263081 -0.004386727 0" size="0.001"/>
+    <site name="site_ground_j1" pos="-0.034434885 -0.017326647 0" size="0.001"/>
+    <site name="site_ground_j2" pos="-0.021563436 -0.049170096 0" size="0.001"/>
+    <camera name="closeup" pos="0.000 -0.176 0.176" xyaxes="1.000 -0.000 0.000 0.000 0.707 0.707"/>
+  </worldbody>
+  <equality>
+    <connect name="J3" site1="site_link_1_j3" site2="site_link_3_j3"/>
+    <connect name="J5" site1="site_link_2_j5" site2="site_link_3_j5"/>
+  </equality>
+  <actuator>
+    <position name="input_servo" joint="J1" kp="10" ctrlrange="0 2.4778759"/>
+  </actuator>
+</mujoco>
